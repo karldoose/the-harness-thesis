@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you refer to this white paper, please cite it as below."
+authors:
+- family-names: "Doose"
+  given-names: "Karl"
+title: "The Harness Thesis"
+version: 2.0
+date-released: 2026-01-26
+url: "https://github.com/karldoose/the-harness-thesis"
+preferred-citation:
+  type: report
+  authors:
+  - family-names: "Doose"
+    given-names: "Karl"
+  title: "The Harness Thesis: Reliability is the next Frontier"
+  year: 2026
+  month: 1
+  url: "https://github.com/karldoose/the-harness-thesis"
+  abstract: "This paper argues that AI capability scales along two axes: Model Scale and Harness Sophistication. It proposes a harness architecture with three components: an Orchestrator, a Preference Learning System, and a Verification Layer."
