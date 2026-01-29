@@ -1,19 +1,25 @@
 cff-version: 1.2.0
-message: "If you refer to this white paper, please cite it as below."
+message: "If you use this white paper, please cite it using the metadata below."
+type: software
+title: "The Harness Thesis: Reliability is the next Frontier"
 authors:
-- family-names: "Doose"
-  given-names: "Karl"
-title: "The Harness Thesis"
-version: 2.0
-date-released: 2026-01-26
-url: "https://github.com/karldoose/the-harness-thesis"
-preferred-citation:
-  type: report
-  authors:
   - family-names: "Doose"
     given-names: "Karl"
+abstract: "This white paper reframes the trajectory of artificial intelligence capability, arguing that frontier progress now depends on harness sophistication rather than model scale alone. The paper introduces a structural diagnosis of why enterprise AI adoption stalls despite benchmark advances: capability scales along two independent axes—model scale (raw parameters) and harness sophistication (systems that wrap the model)—yet investment has skewed disproportionately toward the former."
+version: "1.0.0"
+date-released: "2026-01-29"
+repository-artifact: "https://doi.org/10.5281/zenodo.18416449"
+doi: "10.5281/zenodo.18416449"
+license: "CC-BY-4.0"
+preferred-citation:
+  type: article
   title: "The Harness Thesis: Reliability is the next Frontier"
+  authors:
+    - family-names: "Doose"
+      given-names: "Karl"
+  doi: "10.5281/zenodo.18416449"
   year: 2026
   month: 1
-  url: "https://github.com/karldoose/the-harness-thesis"
-  abstract: "This paper argues that AI capability scales along two axes: Model Scale and Harness Sophistication. It proposes a harness architecture with three components: an Orchestrator, a Preference Learning System, and a Verification Layer."
+  publisher:
+    name: "Zenodo"
+  url: "https://doi.org/10.5281/zenodo.18416449"
