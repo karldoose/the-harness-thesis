@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Harness Thesis | Reliability is the next Frontier</title>
+    <meta name="description" content="A white paper arguing that AI capability scales along two axes: Model Scale and Harness Sophistication.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette */
+            --col-foundation: #2A9D8F;
+            --col-domain: #E9C46A;
+            --col-diff: #E76F51;
+            
+            /* Light Theme */
+            --bg-body: #FAFAF9;
+            --bg-surface: #FFFFFF;
+            --text-main: #1a1a1a;
+            --text-muted: #555555;
+            --border: #E5E5E5;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --code-bg: #F1F1F1;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #111111;
+            --bg-surface: #1A1A1A;
+            --text-main: #EDEDED;
+            --text-muted: #A0A0A0;
+            --border: #333333;
+            --nav-bg: rgba(20, 20, 20, 0.8);
+            --code-bg: #222222;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Typography - Refined Scale */
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            font-weight: 400;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+        
+        strong { font-weight: 600; color: var(--text-main); }
+        em { font-style: italic; }
+
+        /* Layout - Tighter Container */
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+
+        .section-spacer { padding: 3.5rem 0; }
+        
+        /* Floating Navigation - Refined */
+        .floating-nav {
+            position: fixed;
+            left: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--border);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .nav-dot:hover::after { opacity: 1; }
+        .nav-dot.active { transform: scale(1.3); }
+        .nav-dot.active::after { opacity: 1; color: var(--text-main); }
+
+        .nav-dot[href="#why"].active { background-color: var(--col-foundation); }
+        .nav-dot[href="#what"].active { background-color: var(--col-domain); }
+        .nav-dot[href="#how"].active { background-color: var(--col-diff); }
+        .nav-dot[href="#author"].active { background-color: var(--text-main); }
+
+        /* Dark Mode Toggle - Refined */
+        .theme-toggle {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+        .theme-toggle:hover { border-color: var(--text-main); color: var(--text-main); }
+
+        /* Header - Balanced Spacing */
+        header {
+            padding-top: 14vh;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-meta {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.35rem;
+            margin-top: 0.75rem;
+            margin-bottom: 2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-family: 'Merriweather', serif;
+        }
+
+        h1 { 
+            font-size: 3rem; 
+            line-height: 1.15; 
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .btn-group { 
+            display: flex; 
+            gap: 0.875rem; 
+            margin-top: 1.75rem; 
+            flex-wrap: wrap; 
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--text-main);
+            color: var(--bg-body);
+            padding: 0.7rem 1.4rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+        }
+        
+        .btn.secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn:hover { 
+            opacity: 0.85; 
+            transform: translateY(-1px);
+        }
+        .btn.secondary:hover { 
+            border-color: var(--text-main); 
+            opacity: 1;
+        }
+
+        /* Content Blocks - Refined */
+        .chapter-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            margin-bottom: 0.875rem;
+            display: block;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .chapter-label.teal { color: var(--col-foundation); }
+        .chapter-label.ochre { color: var(--col-domain); }
+        .chapter-label.salmon { color: var(--col-diff); }
+
+        .content-block h2 { 
+            font-size: 1.85rem; 
+            margin-bottom: 1.25rem;
+            font-weight: 400;
+            line-height: 1.25;
+        }
+
+        .highlight-box {
+            background-color: var(--bg-surface);
+            border-left: 3px solid var(--text-main);
+            padding: 1.5rem 1.75rem;
+            margin: 2rem 0;
+            border-radius: 0 6px 6px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .highlight-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.01em;
+        }
+
+        .highlight-box p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        ul.key-points { 
+            list-style: none; 
+            margin-bottom: 0;
+        }
+        ul.key-points li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.875rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        ul.key-points li:last-child {
+            margin-bottom: 0;
+        }
+        ul.key-points li::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--col-domain);
+            position: absolute; 
+            left: 0; 
+            top: 0.6rem;
+        }
+
+        /* Timeline phases - Refined */
+        .phase { 
+            margin-bottom: 1.25rem;
+            padding-left: 0;
+        }
+        .phase:last-child {
+            margin-bottom: 0;
+        }
+        .phase-year { 
+            font-family: 'Inter', sans-serif; 
+            font-weight: 600; 
+            color: var(--text-main);
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+        }
+        .phase p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        /* Author Section - Refined */
+        .author-section { 
+            border-top: 1px solid var(--border); 
+            margin-top: 2rem; 
+        }
+        .author-grid { 
+            display: flex; 
+            gap: 2rem; 
+            align-items: flex-start; 
+        }
+        .author-img {
+            width: 90px; 
+            height: 90px; 
+            border-radius: 50%;
+            background-color: var(--border); 
+            object-fit: cover; 
+            flex-shrink: 0;
+        }
+        
+        .author-grid h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .author-grid p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+        
+        footer {
+            margin-top: 3rem; 
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted); 
+            font-size: 0.8rem;
+            display: flex; 
+            justify-content: space-between;
+            letter-spacing: 0.01em;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .floating-nav { display: none; }
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 2.4rem; }
+            .subtitle { font-size: 1.15rem; }
+            header { padding-top: 12vh; }
+            .author-grid { flex-direction: column; gap: 1.25rem; }
+            .btn { width: 100%; justify-content: center; }
+            .section-spacer { padding: 2.5rem 0; }
+            .content-block h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body id="top">
+
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Dark Mode</button>
+
+    <nav class="floating-nav">
+        <a href="#why" class="nav-dot" data-label="Why"></a>
+        <a href="#what" class="nav-dot" data-label="What"></a>
+        <a href="#how" class="nav-dot" data-label="How"></a>
+        <a href="#author" class="nav-dot" data-label="Author"></a>
+    </nav>
+
+    <main class="container">
+        
+        <header>
+            <div class="header-meta">
+                <span>January 2026</span>
+                <span style="font-size: 0.8rem;">•</span>
+                <span>White Paper</span>
+            </div>
+            <h1>The Harness Thesis</h1>
+            <p class="subtitle">Reliability is the next Frontier</p>
+            
+            <div class="btn-group">
+                <a href="The_Harness_Thesis.pdf" class="btn" download>
+                    Download PDF
+                </a>
+                <a href="https://github.com/karldoose/the-harness-thesis" target="_blank" class="btn secondary">
+                    View on GitHub
+                </a>
+            </div>
+        </header>
+
+        <section id="why" class="section-spacer content-block">
+            <span class="chapter-label teal">01. Why Impact Stalls</span>
+            <h2>Capability is not Reliability</h2>
+            <p>In late 2025, a six-person startup named Poetiq achieved state-of-the-art on ARC-AGI-2, the most demanding test of machine reasoning, beating Google at half the cost. They trained no models. They built a better harness.</p>
+            <p>AI capability scales along two axes: <strong>Model Scale</strong> (raw parameters, training compute) and <strong>Harness Sophistication</strong> (verification, iteration, adaptation). The industry has invested hundreds of billions in the first while leaving the second largely unexplored. The returns have inverted: harness sophistication now offers greater ROI than training runs.</p>
+            <p>But why do we need additional investment and better ROI in the first place? Often we hear that the current approach is working, with scaling increasingly yielding better results. Well, of the 88% of enterprises using AI only 6-7% achieve value at scale and the barriers to predictable value at scale seem immovable with the current approaches.</p>
+            
+            <div class="highlight-box" style="border-color: var(--col-foundation);">
+                <h3>The Barrier is Reliability</h3>
+                <p style="margin-bottom: 0.875rem;">It fractures along two dimensions:</p>
+                <ul class="key-points">
+                    <li><strong>Formal Reliability:</strong> Even 95% per-step accuracy compounds to just 36% success over twenty sequential steps—and enterprise workflows involve dozens of decisions. Worse, models cannot verify their own work reliably. When a model checks its own output, the verifier shares the generator's blind spots.</li>
+                    <li><strong>Preference Reliability:</strong> Models generate average outputs. They cannot learn the specific judgment that creates competitive advantage like the senior counsel's risk tolerance, the creative director's taste, the strategist's implicit tradeoffs. The "Differentiation" layer of work, where premium value lives, remains inaccessible to generic AI.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="what" class="section-spacer content-block">
+            <span class="chapter-label ochre">02. What Scales Next</span>
+            <h2>The Harness Architecture</h2>
+            <p>We propose a paradigm shift: keep foundation models <strong>frozen</strong> (avoiding catastrophic forgetting) and embed intelligence in external infrastructure.</p>
+            <p>The harness architecture operates through three inseparable components:</p>
+            
+            <ul class="key-points" style="margin-bottom: 1.5rem;">
+                <li><strong>The Orchestrator:</strong> governs iteration loops, allocates test-time compute optimally (matching models 14× larger), and stops aggressively when evidence converges which converts inference budget into tunable reliability.</li>
+                <li><strong>The Verification Layer:</strong> breaks the self-verification paradox through heterogeneous checking: formal provers (Lean, compilers, test suites) for closed domains where truth is binary; parameterized simulation for complex domains (market entry, policy) where it generates calibrated confidence distributions under explicit assumptions.</li>
+                <li><strong>The Preference Learning System:</strong> captures tacit expertise from implicit signals (choices, edits, rejections) without modifying model weights, enabling AI that learns what you consider good rather than what the training data averaged.</li>
+            </ul>
+
+            <div class="highlight-box" style="border-color: var(--col-domain);">
+                <h3>The Convergence Thesis</h3>
+                <p style="margin-bottom: 0;">Robust verification of complex, open-world claims eventually requires the same capabilities as generating those claims reliably, which are world models capable of causal reasoning and counterfactual simulation. There is no cheap verifier for hard problems. The verification gap and the AGI gap are the same gap. Building this infrastructure is building the path to general intelligence.</p>
+            </div>
+        </section>
+
+        <section id="how" class="section-spacer content-block">
+            <span class="chapter-label salmon">03. How Value Accumulates</span>
+            <h2>Strategic Implications</h2>
+            <p style="margin-bottom: 1.5rem;">The harness evolves through four phases:</p>
+            
+            <div class="phase">
+                <span class="phase-year">2025–2026: Foundation Loops</span>
+                <p>Formal verification for code/compliance reaches production reliability (95%+).</p>
+            </div>
+            <div class="phase">
+                <span class="phase-year">2026–2028: Domain Loops</span>
+                <p>Semi-automated verification matures for legal, medical, and scientific analysis (85–90% reliability with human oversight).</p>
+            </div>
+            <div class="phase">
+                <span class="phase-year">2026–2029: Differentiation Loops</span>
+                <p>Preference learning closes and generic AI becomes personal AI, unlocking mass enterprise adoption.</p>
+            </div>
+            <div class="phase">
+                <span class="phase-year">2027–2030+: World Model Integration</span>
+                <p>Causal simulation for open domains approaches the AGI threshold.</p>
+            </div>
+
+            <div class="highlight-box" style="border-color: var(--col-diff);">
+                <h3>Strategic Imperatives</h3>
+                <ul class="key-points">
+                    <li><strong>For Executives:</strong> The bottleneck is no longer model capability but verification infrastructure. Invest in domain formalization (codifying constraints enables automation) and capture preference signals now. The judgment data you accumulate today becomes your moat tomorrow.</li>
+                    <li><strong>For Investors:</strong> Value is shifting from foundation models (CapEx-dominant, binary outcomes, $100M+ training runs) to the harness layer (OpEx-dominant, iterative, modular). As models commoditize, orchestration and verification capture margin.</li>
+                    <li><strong>For Researchers:</strong> Verification offers a complementary path to AGI. The alignment problem and the verification problem are identical. Advancing causal reasoning and world models serves both safety and capability objectives simultaneously.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="author" class="author-section section-spacer">
+            <div class="author-grid">
+                <img src="assets/author.jpg" alt="Karl Doose" class="author-img">
+                <div>
+                    <h3>About the Author</h3>
+                    <p style="color: var(--text-main);">
+                        <strong>Karl Doose</strong> is a technology executive and founder advising global organizations at the highest operational levels on emerging technology deployment. Having built and transformed organizations at scale within SAP and the startup ecosystem, he bridges the gap between technological potential and operational capability required to realize outcomes.
+                    </p>
+                    <div style="font-size: 0.9rem;">
+                        <a href="https://linkedin.com/in/karldoose" style="color: var(--text-main); font-weight: 500; text-decoration: none;">LinkedIn</a>
+                        <span style="margin: 0 0.5rem; color: var(--border);">/</span>
+                        <a href="mailto:karl.doose@gmail.com" style="color: var(--text-main); font-weight: 500; text-decoration: none;">Contact</a>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <span>&copy; 2026 Karl Doose. Licensed under CC-BY-4.0.</span>
+                <span>Version 1.0</span>
+            </footer>
+        </section>
+
+    </main>
+
+    <script>
+        // Dark Mode Logic
+        const toggleBtn = document.getElementById('themeBtn');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            toggleBtn.textContent = 'Light Mode';
+        }
+
+        function toggleTheme() {
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                toggleBtn.textContent = 'Dark Mode';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                toggleBtn.textContent = 'Light Mode';
+            }
+        }
+
+        // Active Navigation Logic
+        const sections = document.querySelectorAll('section');
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-40% 0px -40% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navDots.forEach(dot => {
+                        dot.classList.remove('active');
+                        if (dot.getAttribute('href').substring(1) === entry.target.id) {
+                            dot.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
