@@ -141,6 +141,11 @@
             font-weight: 500;
             transition: all 0.2s;
             letter-spacing: 0.02em;
+            z-index: 101;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         .theme-toggle:hover { border-color: var(--text-main); color: var(--text-main); }
 
@@ -391,7 +396,7 @@
             
             <div class="btn-group">
                 <a href="The_Harness_Thesis.pdf" class="btn" download>
-                    Download PDF
+                    Download Full Paper
                 </a>
                 <a href="https://github.com/karldoose/the-harness-thesis" target="_blank" class="btn secondary">
                     View on GitHub
